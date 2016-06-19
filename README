@@ -1,0 +1,24 @@
+Where's My Mouse?! v1.0
+©2002 by Marcin 'Shard' Konicki
+shard@beosjournal.org
+http://shard.beosjournal.org
+
+Where's My Mouse is a little application which draws circles around mouse cursor. This can help to find it on screen especially in presentations on the beamer or on the laptop ;]
+
+A little explanation ("what is what"):
+
+Use SpicyKeys to set a shortcut to it. This will make WMM more functional ;]
+
+Just run it to see effect.
+To show settings panel run it with "s" argument from terminal (remember about putting "\" before each non letter char in binary name) or some other application letting You run applications with arguments (like SpicyKeys :)
+
+
+THX:
+
+Technix  for idea, and Jeremy for great SpicyKeys.
+mmu_man for idea to use B_TRANSPARENT_32_BIT as view color.
+Author of cheese picture used in icon (http://homepage1.nifty.com/studio5/icon/maine.html).
+Axeld for telling me about beamers and laptops - where this app may be a little bit more useful than not at all ;]
+
+
+Shard
