@@ -30,6 +30,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #include <Window.h>
 
 #include <stdio.h>
+#include <string.h>
 
 #include "SSlider.h"
 #include "icon.h"

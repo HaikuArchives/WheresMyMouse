@@ -20,6 +20,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
 #include "SSlider.h"
 
 //----------------------------------------------------------------------------
