@@ -100,12 +100,28 @@ SaveSettings( WMM_SETTINGS *settings)
 //---------------------------------------------------
 //	WMM main function
 //---------------------------------------------------
+void
+usage()
+{
+	printf("'Where is my Mouse' shows a short animation to easily locate the "
+		"mouse pointer.\n"
+		"Use the Shortcuts preferences to assign your preferred key combo.\n"
+		"usage:\tWhereIsMyMouse [s|-s|--set]\n"
+		"\ts, -s, --set\tShow the settings panel\n\n");
+}
+
 int
 main(int argc, char** argv)
 {
 	bool showSettingsPanel = false;
-	if( argc > 1 && argv[1][0] == 's')
-		showSettingsPanel = true;
+	if( argc > 1) {
+		if (!strcmp(argv[1], "s") || !strcmp(argv[1], "-s") || !strcmp(argv[1], "--set"))
+			showSettingsPanel = true;
+		else {
+			usage();
+			return B_ERROR;
+		}
+	}
 		
 	WMMApp* App = new WMMApp( showSettingsPanel);
 	App->Run();
@@ -113,6 +129,7 @@ main(int argc, char** argv)
 
 	return B_NO_ERROR;
 }
+
 
 
 //----------------------------------------------------------------------------
@@ -131,7 +148,7 @@ WMMApp::WMMApp( bool showSettingsPanel)
 
 	if( showSettingsPanel)
 	{
-		window = new BWindow( BRect( 200, 200, 200, 200), "What would You like?", B_TITLED_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL, B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_NOT_MINIMIZABLE | B_WILL_ACCEPT_FIRST_CLICK | B_QUIT_ON_WINDOW_CLOSE, B_ALL_WORKSPACES);
+		window = new BWindow( BRect( 200, 200, 200, 200), "Where's my Mouse settings?", B_TITLED_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL, B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_NOT_MINIMIZABLE | B_WILL_ACCEPT_FIRST_CLICK | B_QUIT_ON_WINDOW_CLOSE, B_ALL_WORKSPACES);
 		window->AddChild( new WMMSettingsView());
 	}
 	else
@@ -258,13 +275,14 @@ WMMSettingsView::WMMSettingsView()
 	preferredWidth = left;
 	preferredHeight = 10;
 	BRect rect;
+	rgb_color color = ui_color(B_MENU_SELECTION_BACKGROUND_COLOR);
 
 	//
-	slidRadius = new SSlider( BRect( left, preferredHeight, left+200, preferredHeight), "slidRadius", "Circle radius at start", new BMessage( WMM_MSG_SET_RADIUS), 16, 64);
+	slidRadius = new SSlider( BRect( left, preferredHeight, left+200, preferredHeight), "slidRadius", "Radius at start", new BMessage( WMM_MSG_SET_RADIUS), 16, 64);
 	slidRadius->SetHashMarks( B_HASH_MARKS_BOTTOM);
-	slidRadius->SetHashMarkCount( 48);
+	slidRadius->SetHashMarkCount( 16);
 	//slidRadius->SetLimitLabels("16", "64");
-	slidRadius->UseFillColor( true, &ui_color( B_MENU_SELECTION_BACKGROUND_COLOR));
+	slidRadius->UseFillColor( true, &color);
 	slidRadius->SetValue( Settings.radius);
 	slidRadius->ResizeToPreferred();
 
@@ -273,10 +291,10 @@ WMMSettingsView::WMMSettingsView()
 	if( rect.bottom > preferredHeight) preferredHeight = rect.bottom + 5;
 
 	//
-	slidCircles = new SSlider( BRect( left, preferredHeight, left+200, preferredHeight), "slidRadius", "How many circles?", new BMessage( WMM_MSG_SET_CIRCLES), 1, 15);
+	slidCircles = new SSlider( BRect( left, preferredHeight, left+200, preferredHeight), "slidRadius", "Number of circles", new BMessage( WMM_MSG_SET_CIRCLES), 1, 15);
 	slidCircles->SetHashMarks( B_HASH_MARKS_BOTTOM);
 	slidCircles->SetHashMarkCount( 15);
-	slidCircles->UseFillColor( true, &ui_color( B_MENU_SELECTION_BACKGROUND_COLOR));
+	slidCircles->UseFillColor( true, &color);
 	slidCircles->SetValue( Settings.circles);
 	slidCircles->ResizeToPreferred();
 
@@ -285,10 +303,10 @@ WMMSettingsView::WMMSettingsView()
 	if( rect.bottom > preferredHeight) preferredHeight = rect.bottom + 5;
 
 	//
-	slidLineWidth = new SSlider( BRect( left, preferredHeight, left+200, preferredHeight), "slidRadius", "Circle's width", new BMessage( WMM_MSG_SET_LWIDTH), 1, 32);
+	slidLineWidth = new SSlider( BRect( left, preferredHeight, left+200, preferredHeight), "slidRadius", "Circle width", new BMessage( WMM_MSG_SET_LWIDTH), 1, 32);
 	slidLineWidth->SetHashMarks( B_HASH_MARKS_BOTTOM);
-	slidLineWidth->SetHashMarkCount( 32);
-	slidLineWidth->UseFillColor( true, &ui_color( B_MENU_SELECTION_BACKGROUND_COLOR));
+	slidLineWidth->SetHashMarkCount( 16);
+	slidLineWidth->UseFillColor( true, &color);
 	slidLineWidth->SetValue( Settings.lwidth);
 	slidLineWidth->ResizeToPreferred();
 
@@ -297,10 +315,10 @@ WMMSettingsView::WMMSettingsView()
 	if( rect.bottom > preferredHeight) preferredHeight = rect.bottom + 5;
 
 	//
-	slidLineSpace = new SSlider( BRect( left, preferredHeight, left+200, preferredHeight), "slidRadius", "Space width between circles", new BMessage( WMM_MSG_SET_LSPACE), 1, 32);
+	slidLineSpace = new SSlider( BRect( left, preferredHeight, left+200, preferredHeight), "slidRadius", "Space between circles", new BMessage( WMM_MSG_SET_LSPACE), 1, 32);
 	slidLineSpace->SetHashMarks( B_HASH_MARKS_BOTTOM);
-	slidLineSpace->SetHashMarkCount( 32);
-	slidLineSpace->UseFillColor( true, &ui_color( B_MENU_SELECTION_BACKGROUND_COLOR));
+	slidLineSpace->SetHashMarkCount( 16);
+	slidLineSpace->UseFillColor( true, &color);
 	slidLineSpace->SetValue( Settings.lspace);
 	slidLineSpace->ResizeToPreferred();
 
@@ -308,12 +326,11 @@ WMMSettingsView::WMMSettingsView()
 	if( rect.right > preferredWidth) preferredWidth = rect.right;
 	if( rect.bottom > preferredHeight) preferredHeight = rect.bottom + 5;
 
-
 	//
 	slidPulseRate = new SSlider( BRect( left, preferredHeight, left+200, preferredHeight), "slidRadius", "Animation speed", new BMessage( WMM_MSG_SET_PULSE), 1, 5);
 	slidPulseRate->SetHashMarks( B_HASH_MARKS_BOTTOM);
 	slidPulseRate->SetHashMarkCount( 5);
-	slidPulseRate->UseFillColor( true, &ui_color( B_MENU_SELECTION_BACKGROUND_COLOR));
+	slidPulseRate->UseFillColor( true, &color);
 	slidPulseRate->SetValue( Settings.pulse / 100000);
 	slidPulseRate->ResizeToPreferred();
 
@@ -396,8 +413,8 @@ WMMSettingsView::Draw( BRect updateRect)
 	
 	InitDemo();
 
-	SetFontSize( 5);
-	DrawString( "by Shard", BPoint( demoRect.right - StringWidth("by Shard") + 2, demoRect.bottom + 5));
+	SetFontSize( 8);
+	DrawString( "by Shard", BPoint( demoRect.right - StringWidth("by Shard") + 2, demoRect.bottom + 8));
 }
 
 //---------------------------------------------------
@@ -410,8 +427,8 @@ WMMSettingsView::DrawDemo()
 	{
 		float oldPen = PenSize();
 		SetPenSize( Settings.lwidth);
-		
-		ConstrainClippingRegion( &BRegion( BRect( demoRect.left+1, demoRect.top+1, demoRect.right-1, demoRect.bottom-1)));
+		BRegion region = BRegion(BRect(demoRect.left+1, demoRect.top+1, demoRect.right-1, demoRect.bottom-1));
+		ConstrainClippingRegion(&region);
 		
 		SetHighColor( demoColor);
 		StrokeEllipse( demoPoint, demoRadius, demoRadius);
