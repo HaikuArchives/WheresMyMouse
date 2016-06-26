@@ -100,12 +100,28 @@ SaveSettings( WMM_SETTINGS *settings)
 //---------------------------------------------------
 //	WMM main function
 //---------------------------------------------------
+void
+usage()
+{
+	printf("'Where is my Mouse' shows a short animation to easily locate the "
+		"mouse pointer.\n"
+		"Use the Shortcuts preferences to assign your preferred key combo.\n"
+		"usage:\tWhereIsMyMouse [s|-s|--set]\n"
+		"\ts, -s, --set\tShow the settings panel\n\n");
+}
+
 int
 main(int argc, char** argv)
 {
 	bool showSettingsPanel = false;
-	if( argc > 1 && argv[1][0] == 's')
-		showSettingsPanel = true;
+	if( argc > 1) {
+		if (!strcmp(argv[1], "s") || !strcmp(argv[1], "-s") || !strcmp(argv[1], "--set"))
+			showSettingsPanel = true;
+		else {
+			usage();
+			return B_ERROR;
+		}
+	}
 		
 	WMMApp* App = new WMMApp( showSettingsPanel);
 	App->Run();
@@ -113,6 +129,7 @@ main(int argc, char** argv)
 
 	return B_NO_ERROR;
 }
+
 
 
 //----------------------------------------------------------------------------

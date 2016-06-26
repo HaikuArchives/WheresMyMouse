@@ -41,7 +41,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 //----------------------------------------------------------------------------
 
 #define WMM_SIGNATURE "application/x-vnd.Shard.WMM"
-#define WMM_SETTINGS_FILE "shard_Where'sMyMouse?!_settings"
+#define WMM_SETTINGS_FILE "WhereIsMyMouse_settings"
 
 const int32 WMM_MSG_SET_RADIUS = 'WSrd';
 const int32 WMM_MSG_SET_CIRCLES = 'WScr';
