@@ -3,14 +3,15 @@ Where's My Mouse?! v1.0
 shard@beosjournal.org
 http://shard.beosjournal.org
 
-Where's My Mouse is a little application which draws circles around mouse cursor. This can help to find it on screen especially in presentations on the beamer or on the laptop ;]
+Where Is My Mouse is a little application that draws concentric circles around the mouse pointer. This can help finding it on the screen, especially when doing a presentations with a projector or on a laptop ;]
 
-A little explanation ("what is what"):
+A quick explanation:
 
-Use SpicyKeys to set a shortcut to it. This will make WMM more functional ;]
+Use Haiku's Shortcuts preferences to set a key comination to it. This will make WMM more functional ;]
 
-Just run it to see effect.
-To show settings panel run it with "s" argument from terminal (remember about putting "\" before each non letter char in binary name) or some other application letting You run applications with arguments (like SpicyKeys :)
+Just run it to see the effect.
+To change settings like number of circles, their width and the speed of the animation, run WMM from the Terminal with the "-s" parameter. This will open a settings panel to adjust those visuals.
+Settings are saved in ~/config/settings/WhereIsMyMouse_settings
 
 
 THX:

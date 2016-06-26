@@ -1,3 +1,8 @@
+[2016-06-26]
+- Build fixes for Haiku
+- New vector icon
+- Small changes to the settings panel
+
 [2002-10-27]
 - FIXED: SSlider constructor function in cpp had illegal default args. It compiled ok, but wel.. it was illegal :) THX Brian.
 - ADDED: PPC port by Brian Francis.
