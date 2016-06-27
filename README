@@ -7,7 +7,7 @@ Where Is My Mouse is a little application that draws concentric circles around t
 
 A quick explanation:
 
-Use Haiku's Shortcuts preferences to set a key comination to it. This will make WMM more functional ;]
+Use Haiku's Shortcuts preferences to set a key combination to it. This will make WMM more functional ;]
 
 Just run it to see the effect.
 To change settings like number of circles, their width and the speed of the animation, run WMM from the Terminal with the "-s" parameter. This will open a settings panel to adjust those visuals.
