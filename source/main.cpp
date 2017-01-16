@@ -18,6 +18,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 //
 //----------------------------------------------------------------------------
 
+#include <LayoutBuilder.h>
 #include "main.h"
 
 //----------------------------------------------------------------------------
@@ -148,7 +149,8 @@ WMMApp::WMMApp( bool showSettingsPanel)
 
 	if( showSettingsPanel)
 	{
-		window = new BWindow( BRect( 200, 200, 200, 200), "Where's my Mouse settings?", B_TITLED_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL, B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_NOT_MINIMIZABLE | B_WILL_ACCEPT_FIRST_CLICK | B_QUIT_ON_WINDOW_CLOSE, B_ALL_WORKSPACES);
+		window = new BWindow(BRect(200, 200, 200, 200), "Where's my Mouse settings?", B_TITLED_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL, B_AUTO_UPDATE_SIZE_LIMITS | B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_NOT_MINIMIZABLE | B_WILL_ACCEPT_FIRST_CLICK | B_QUIT_ON_WINDOW_CLOSE, B_ALL_WORKSPACES);
+		window->SetLayout(new BGroupLayout(B_VERTICAL));
 		window->AddChild( new WMMSettingsView());
 	}
 	else
@@ -269,92 +271,75 @@ WMMSettingsView::WMMSettingsView()
 
 	Icon = new BBitmap( BRect( 0, 0, 31, 31), B_RGBA32);
 	memcpy( Icon->Bits(), WMM_ICON_DATA, 32*32*4);
-	
-	float left = 54;
+	fIconView = new StripeView(Icon);
 
-	preferredWidth = left;
-	preferredHeight = 10;
-	BRect rect;
 	rgb_color color = ui_color(B_MENU_SELECTION_BACKGROUND_COLOR);
 
 	//
-	slidRadius = new SSlider( BRect( left, preferredHeight, left+200, preferredHeight), "slidRadius", "Radius at start", new BMessage( WMM_MSG_SET_RADIUS), 16, 64);
+	slidRadius = new SSlider(BRect(0, 0, 0, 0), "slidRadius", "Radius at start", new BMessage(WMM_MSG_SET_RADIUS), 16, 64);
 	slidRadius->SetHashMarks( B_HASH_MARKS_BOTTOM);
 	slidRadius->SetHashMarkCount( 16);
 	//slidRadius->SetLimitLabels("16", "64");
 	slidRadius->UseFillColor( true, &color);
 	slidRadius->SetValue( Settings.radius);
-	slidRadius->ResizeToPreferred();
-
-	rect = slidRadius->Frame();
-	if( rect.right > preferredWidth) preferredWidth = rect.right;
-	if( rect.bottom > preferredHeight) preferredHeight = rect.bottom + 5;
 
 	//
-	slidCircles = new SSlider( BRect( left, preferredHeight, left+200, preferredHeight), "slidRadius", "Number of circles", new BMessage( WMM_MSG_SET_CIRCLES), 1, 15);
+	slidCircles = new SSlider(BRect(0, 0, 0, 0), "slidRadius", "Number of circles", new BMessage(WMM_MSG_SET_CIRCLES), 1, 15);
 	slidCircles->SetHashMarks( B_HASH_MARKS_BOTTOM);
 	slidCircles->SetHashMarkCount( 15);
 	slidCircles->UseFillColor( true, &color);
 	slidCircles->SetValue( Settings.circles);
-	slidCircles->ResizeToPreferred();
-
-	rect = slidCircles->Frame();
-	if( rect.right > preferredWidth) preferredWidth = rect.right;
-	if( rect.bottom > preferredHeight) preferredHeight = rect.bottom + 5;
 
 	//
-	slidLineWidth = new SSlider( BRect( left, preferredHeight, left+200, preferredHeight), "slidRadius", "Circle width", new BMessage( WMM_MSG_SET_LWIDTH), 1, 32);
+	slidLineWidth = new SSlider(BRect(0, 0, 0, 0), "slidRadius", "Circle width", new BMessage(WMM_MSG_SET_LWIDTH), 1, 32);
 	slidLineWidth->SetHashMarks( B_HASH_MARKS_BOTTOM);
 	slidLineWidth->SetHashMarkCount( 16);
 	slidLineWidth->UseFillColor( true, &color);
 	slidLineWidth->SetValue( Settings.lwidth);
-	slidLineWidth->ResizeToPreferred();
-
-	rect = slidLineWidth->Frame();
-	if( rect.right > preferredWidth) preferredWidth = rect.right;
-	if( rect.bottom > preferredHeight) preferredHeight = rect.bottom + 5;
 
 	//
-	slidLineSpace = new SSlider( BRect( left, preferredHeight, left+200, preferredHeight), "slidRadius", "Space between circles", new BMessage( WMM_MSG_SET_LSPACE), 1, 32);
+	slidLineSpace = new SSlider(BRect(0, 0, 0, 0), "slidRadius", "Space between circles", new BMessage(WMM_MSG_SET_LSPACE), 1, 32);
 	slidLineSpace->SetHashMarks( B_HASH_MARKS_BOTTOM);
 	slidLineSpace->SetHashMarkCount( 16);
 	slidLineSpace->UseFillColor( true, &color);
 	slidLineSpace->SetValue( Settings.lspace);
-	slidLineSpace->ResizeToPreferred();
-
-	rect = slidLineSpace->Frame();
-	if( rect.right > preferredWidth) preferredWidth = rect.right;
-	if( rect.bottom > preferredHeight) preferredHeight = rect.bottom + 5;
 
 	//
-	slidPulseRate = new SSlider( BRect( left, preferredHeight, left+200, preferredHeight), "slidRadius", "Animation speed", new BMessage( WMM_MSG_SET_PULSE), 1, 5);
+	slidPulseRate = new SSlider(BRect(0, 0, 0, 0), "slidRadius", "Animation speed", new BMessage(WMM_MSG_SET_PULSE), 1, 5);
 	slidPulseRate->SetHashMarks( B_HASH_MARKS_BOTTOM);
 	slidPulseRate->SetHashMarkCount( 5);
 	slidPulseRate->UseFillColor( true, &color);
 	slidPulseRate->SetValue( Settings.pulse / 100000);
-	slidPulseRate->ResizeToPreferred();
 
-	rect = slidPulseRate->Frame();
-	if( rect.right > preferredWidth) preferredWidth = rect.right;
-	if( rect.bottom > preferredHeight) preferredHeight = rect.bottom+15;
-	
-	//
-	demoRect = BRect( left, preferredHeight, left+190, preferredHeight+50);
-	demoPoint = BPoint( demoRect.left + ( demoRect.Width() / 2), demoRect.top + ( demoRect.Height() / 2));
-	demoAlphaMod = ( 255 - WMM_ALPHA_MIN) / Settings.circles;
+	fDemoView = new BView(BRect(0, 0, 190, 50), NULL, 0, B_FULL_UPDATE_ON_RESIZE);
+
+	fAuthorView = new BStringView(NULL, "by Shard");
+	BFont font;
+	fAuthorView->GetFont(&font);
+	int size = font.Size();	// round down font size
+	size = size > 12 ? size * 2/3 : 8;
+	fAuthorView->SetFontSize(size);
+	fAuthorView->SetAlignment(B_ALIGN_RIGHT);
+
+	demoAlphaMod = (255 - WMM_ALPHA_MIN) / Settings.circles;
 	InitDemo();
 
-	if( demoRect.right > preferredWidth) preferredWidth = demoRect.right;
-	if( demoRect.bottom > preferredHeight) preferredHeight = demoRect.bottom;
-
-	preferredHeight += 8;
-	ResizeToPreferred();
-
-	AddChild( slidRadius);
-	AddChild( slidCircles);
-	AddChild( slidLineWidth);
-	AddChild( slidLineSpace);
-	AddChild( slidPulseRate);
+	BLayoutBuilder::Group<>(this, B_HORIZONTAL, 0)
+		.Add(fIconView, 0)
+		.AddGroup(B_VERTICAL, 0)
+			.AddStrut(10)
+			.Add(slidRadius)
+			.Add(slidCircles)
+			.Add(slidLineWidth)
+			.Add(slidLineSpace)
+			.Add(slidPulseRate)
+			.AddStrut(10)
+			.Add(fDemoView)
+			.Add(fAuthorView)
+			.AddStrut(10)
+		.End()
+		.AddStrut(10)
+	.End();
 }
 
 //---------------------------------------------------
@@ -362,6 +347,8 @@ WMMSettingsView::WMMSettingsView()
 //---------------------------------------------------
 WMMSettingsView::~WMMSettingsView()
 {
+	fIconView->RemoveSelf();
+	delete fIconView;
 	slidRadius->RemoveSelf();
 	delete slidRadius;
 	slidCircles->RemoveSelf();
@@ -372,7 +359,11 @@ WMMSettingsView::~WMMSettingsView()
 	delete slidLineSpace;
 	slidPulseRate->RemoveSelf();
 	delete slidPulseRate;
-	
+	fDemoView->RemoveSelf();
+	delete fDemoView;
+	fAuthorView->RemoveSelf();
+	delete fAuthorView;
+
 	delete Icon;
 
 	SaveSettings( &Settings);
@@ -389,7 +380,6 @@ WMMSettingsView::AttachedToWindow()
 	slidLineWidth->SetTarget( this);
 	slidLineSpace->SetTarget( this);
 	slidPulseRate->SetTarget( this);
-	Window()->ResizeTo( preferredWidth, preferredHeight);
 	Window()->SetPulseRate( Settings.pulse);
 }
 
@@ -399,22 +389,15 @@ WMMSettingsView::AttachedToWindow()
 void
 WMMSettingsView::Draw( BRect updateRect)
 {
-	rgb_color color = tint_color( ViewColor(), B_HIGHLIGHT_BACKGROUND_TINT);
-	color.alpha = 255;
-	SetHighColor( color);
-	FillRect( BRect( 0, 0, 32, preferredHeight));
-	DrawBitmap( Icon, BPoint( 16, 8));
-	
-	//demo background
-	SetHighColor( 255, 255, 255, 255);
-	FillRoundRect( demoRect, 2, 2);
-	SetHighColor( 0, 0, 0, 255);
-	StrokeRoundRect( demoRect, 2, 2);
-	
-	InitDemo();
+	demoRect = fDemoView->Bounds();
 
-	SetFontSize( 8);
-	DrawString( "by Shard", BPoint( demoRect.right - StringWidth("by Shard") + 2, demoRect.bottom + 8));
+	//demo background
+	fDemoView->SetHighColor(255, 255, 255, 255);
+	fDemoView->FillRoundRect(demoRect, 2, 2);
+	fDemoView->SetHighColor(0, 0, 0, 255);
+	fDemoView->StrokeRoundRect(demoRect, 2, 2);
+
+	InitDemo();
 }
 
 //---------------------------------------------------
@@ -423,43 +406,34 @@ WMMSettingsView::Draw( BRect updateRect)
 void
 WMMSettingsView::DrawDemo()
 {
+	float right = demoRect.right, bottom = demoRect.bottom;
+
 	if( demoCircle < Settings.circles)
 	{
-		float oldPen = PenSize();
-		SetPenSize( Settings.lwidth);
-		BRegion region = BRegion(BRect(demoRect.left+1, demoRect.top+1, demoRect.right-1, demoRect.bottom-1));
-		ConstrainClippingRegion(&region);
-		
-		SetHighColor( demoColor);
-		StrokeEllipse( demoPoint, demoRadius, demoRadius);
+		float oldPen = fDemoView->PenSize();
+		fDemoView->SetPenSize(Settings.lwidth);
+		BRegion region = BRegion(BRect(1, 1, right - 1, bottom - 1));
+		fDemoView->ConstrainClippingRegion(&region);
+
+		fDemoView->SetHighColor(demoColor);
+		fDemoView->StrokeEllipse(BPoint(right / 2, bottom / 2), demoRadius, demoRadius);
 		demoRadius += ( Settings.lwidth / 2) + Settings.lspace;
 		demoColor.alpha += demoAlphaMod;
 		demoCircle++;
 
-		ConstrainClippingRegion( NULL);
-		SetPenSize( oldPen);
+		fDemoView->ConstrainClippingRegion(NULL);
+		fDemoView->SetPenSize(oldPen);
 	}
 	else
 	{
 		//demo background
-		SetHighColor( 255, 255, 255, 255);
-		FillRoundRect( BRect( demoRect.left+1, demoRect.top+1, demoRect.right-1, demoRect.bottom-1), 2, 2);
+		fDemoView->SetHighColor(255, 255, 255, 255);
+		fDemoView->FillRoundRect(BRect(1, 1, right - 1, bottom - 1), 2, 2);
 		//SetHighColor( 0, 0, 0, 255);
 		//StrokeRoundRect( demoRect, 2, 2);
-	
+
 		InitDemo();
 	}
-
-}
-
-//---------------------------------------------------
-//	set arguments to values needed for all siblings be visible
-//---------------------------------------------------
-void
-WMMSettingsView::GetPreferredSize( float *width, float *height)
-{
-	*width = preferredWidth;
-	*height = preferredHeight;
 }
 
 //---------------------------------------------------
@@ -478,30 +452,40 @@ WMMSettingsView::MessageReceived( BMessage *msg)
 		return;
 	}
 
+	BRect rect = demoRect;
+	rect.left++;
+	rect.top++;
+	rect.right--;
+	rect.bottom--;
+
 	switch( msg->what)
 	{
 		case WMM_MSG_SET_RADIUS:
 		{
 			msg->FindInt32( "be:value", &Settings.radius);
-			Invalidate( demoRect);
+			fDemoView->Invalidate(rect);
+			InitDemo();
 			break;
 		}
 		case WMM_MSG_SET_CIRCLES:
 		{
 			msg->FindInt32( "be:value", &Settings.circles);
-			Invalidate( demoRect);
+			fDemoView->Invalidate(rect);
+			InitDemo();
 			break;
 		}
 		case WMM_MSG_SET_LWIDTH:
 		{
 			msg->FindInt32( "be:value", &Settings.lwidth);
-			Invalidate( demoRect);
+			fDemoView->Invalidate(rect);
+			InitDemo();
 			break;
 		}
 		case WMM_MSG_SET_LSPACE:
 		{
 			msg->FindInt32( "be:value", &Settings.lspace);
-			Invalidate( demoRect);
+			fDemoView->Invalidate(rect);
+			InitDemo();
 			break;
 		}
 		case WMM_MSG_SET_PULSE:
@@ -509,7 +493,8 @@ WMMSettingsView::MessageReceived( BMessage *msg)
 			msg->FindInt32( "be:value", &Settings.pulse);
 			Settings.pulse = Settings.pulse * 100000;
 			Window()->SetPulseRate( Settings.pulse);
-			Invalidate( demoRect);
+			fDemoView->Invalidate(rect);
+			InitDemo();
 			break;
 		}
 		default:
@@ -524,15 +509,6 @@ void
 WMMSettingsView::Pulse()
 {
 	DrawDemo();
-}
-
-//---------------------------------------------------
-//	Resize view so all siblings will be visible
-//---------------------------------------------------
-void
-WMMSettingsView::ResizeToPreferred()
-{
-	ResizeTo( preferredWidth, preferredHeight);
 }
 
 //---------------------------------------------------

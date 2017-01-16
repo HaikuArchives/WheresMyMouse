@@ -26,6 +26,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #include <FindDirectory.h>
 #include <Path.h>
 #include <Region.h>
+#include <StringView.h>
 #include <View.h>
 #include <Window.h>
 
@@ -33,6 +34,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #include <string.h>
 
 #include "SSlider.h"
+#include "StripeView.h"
 #include "icon.h"
 
 //----------------------------------------------------------------------------
@@ -88,28 +90,27 @@ class WMMSettingsView : public BView
 		void				AttachedToWindow();
 		void				Draw( BRect updateRect);
 		void				DrawDemo();
-		void				GetPreferredSize( float *width, float *height);
 		void				MessageReceived( BMessage *msg);
 		void				Pulse();
-		void				ResizeToPreferred();
 		void				InitDemo();
 		
 	private:
+		StripeView			*fIconView;
+
 		SSlider				*slidRadius;
 		SSlider				*slidCircles;
 		SSlider				*slidLineWidth;
 		SSlider				*slidLineSpace;
 		SSlider				*slidPulseRate;
 		
+		BView				*fDemoView;
+		BStringView			*fAuthorView;
+
 		BRect				demoRect;
 		rgb_color			demoColor;
 		int32				demoCircle;
 		int32				demoRadius;
-		BPoint				demoPoint;
 		int32				demoAlphaMod;
-		
-		float				preferredWidth;
-		float				preferredHeight;
 
 		BBitmap				*Icon;
 
