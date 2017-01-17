@@ -142,23 +142,23 @@ main(int argc, char** argv)
 //---------------------------------------------------
 //	Constructor
 //---------------------------------------------------
-WMMApp::WMMApp( bool showSettingsPanel)
-:	BApplication( WMM_SIGNATURE)
+WMMApp::WMMApp(bool showSettingsPanel)
+:	BApplication(WMM_SIGNATURE)
 {
 	BWindow *window;
 
-	if( showSettingsPanel)
+	if (showSettingsPanel)
 	{
 		window = new BWindow(BRect(200, 200, 200, 200), "Where's my Mouse settings?", B_TITLED_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL, B_AUTO_UPDATE_SIZE_LIMITS | B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_NOT_MINIMIZABLE | B_WILL_ACCEPT_FIRST_CLICK | B_QUIT_ON_WINDOW_CLOSE, B_ALL_WORKSPACES);
 		window->SetLayout(new BGroupLayout(B_VERTICAL));
-		window->AddChild( new WMMSettingsView());
+		window->AddChild(new WMMSettingsView());
 	}
 	else
 	{
-		window = new BWindow( BRect( 0, 0, 0, 0), "Here it is!", B_NO_BORDER_WINDOW_LOOK, B_FLOATING_ALL_WINDOW_FEEL, B_NOT_MOVABLE | B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_NOT_MINIMIZABLE | B_WILL_ACCEPT_FIRST_CLICK | B_QUIT_ON_WINDOW_CLOSE, B_ALL_WORKSPACES);
-		window->AddChild( new WMMView());
+		window = new BWindow(BRect(0, 0, 0, 0), "Here it is!", B_NO_BORDER_WINDOW_LOOK, B_FLOATING_ALL_WINDOW_FEEL, B_NOT_MOVABLE | B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_NOT_MINIMIZABLE | B_WILL_ACCEPT_FIRST_CLICK | B_QUIT_ON_WINDOW_CLOSE, B_ALL_WORKSPACES);
+		window->AddChild(new WMMView());
 	}
-	
+
 	window->Show();
 }
 
@@ -260,69 +260,61 @@ WMMView::Pulse()
 //	Constructor
 //---------------------------------------------------
 WMMSettingsView::WMMSettingsView()
-:	BView( BRect( 0, 0, 0, 0), "Maybe this, or that, or...", B_FOLLOW_ALL_SIDES, B_PULSE_NEEDED | B_WILL_DRAW | B_FRAME_EVENTS | B_FULL_UPDATE_ON_RESIZE)
+:	BView(BRect(0, 0, 0, 0), "Maybe this, or that, or...", B_FOLLOW_ALL_SIDES, B_WILL_DRAW | B_FRAME_EVENTS | B_FULL_UPDATE_ON_RESIZE)
 {
-	LoadSettings( &Settings);
+	SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
-	SetBlendingMode( B_PIXEL_ALPHA, B_ALPHA_OVERLAY);
-	SetDrawingMode( B_OP_ALPHA);
+	Icon = new BBitmap(BRect(0, 0, 31, 31), B_RGBA32);
+	memcpy(Icon->Bits(), WMM_ICON_DATA, 32*32*4);
 
-	SetViewColor( ui_color( B_PANEL_BACKGROUND_COLOR));
-
-	Icon = new BBitmap( BRect( 0, 0, 31, 31), B_RGBA32);
-	memcpy( Icon->Bits(), WMM_ICON_DATA, 32*32*4);
 	fIconView = new StripeView(Icon);
+	fDemoView = new DemoView();
 
 	rgb_color color = ui_color(B_MENU_SELECTION_BACKGROUND_COLOR);
 
 	//
 	slidRadius = new SSlider(BRect(0, 0, 0, 0), "slidRadius", "Radius at start", new BMessage(WMM_MSG_SET_RADIUS), 16, 64);
-	slidRadius->SetHashMarks( B_HASH_MARKS_BOTTOM);
-	slidRadius->SetHashMarkCount( 16);
+	slidRadius->SetHashMarks(B_HASH_MARKS_BOTTOM);
+	slidRadius->SetHashMarkCount(16);
 	//slidRadius->SetLimitLabels("16", "64");
-	slidRadius->UseFillColor( true, &color);
-	slidRadius->SetValue( Settings.radius);
+	slidRadius->UseFillColor(true, &color);
+	slidRadius->SetValue(fDemoView->radius());
 
 	//
 	slidCircles = new SSlider(BRect(0, 0, 0, 0), "slidRadius", "Number of circles", new BMessage(WMM_MSG_SET_CIRCLES), 1, 15);
-	slidCircles->SetHashMarks( B_HASH_MARKS_BOTTOM);
-	slidCircles->SetHashMarkCount( 15);
-	slidCircles->UseFillColor( true, &color);
-	slidCircles->SetValue( Settings.circles);
+	slidCircles->SetHashMarks(B_HASH_MARKS_BOTTOM);
+	slidCircles->SetHashMarkCount(15);
+	slidCircles->UseFillColor(true, &color);
+	slidCircles->SetValue(fDemoView->circles());
 
 	//
 	slidLineWidth = new SSlider(BRect(0, 0, 0, 0), "slidRadius", "Circle width", new BMessage(WMM_MSG_SET_LWIDTH), 1, 32);
-	slidLineWidth->SetHashMarks( B_HASH_MARKS_BOTTOM);
-	slidLineWidth->SetHashMarkCount( 16);
-	slidLineWidth->UseFillColor( true, &color);
-	slidLineWidth->SetValue( Settings.lwidth);
+	slidLineWidth->SetHashMarks(B_HASH_MARKS_BOTTOM);
+	slidLineWidth->SetHashMarkCount(16);
+	slidLineWidth->UseFillColor(true, &color);
+	slidLineWidth->SetValue(fDemoView->lwidth());
 
 	//
 	slidLineSpace = new SSlider(BRect(0, 0, 0, 0), "slidRadius", "Space between circles", new BMessage(WMM_MSG_SET_LSPACE), 1, 32);
-	slidLineSpace->SetHashMarks( B_HASH_MARKS_BOTTOM);
-	slidLineSpace->SetHashMarkCount( 16);
-	slidLineSpace->UseFillColor( true, &color);
-	slidLineSpace->SetValue( Settings.lspace);
+	slidLineSpace->SetHashMarks(B_HASH_MARKS_BOTTOM);
+	slidLineSpace->SetHashMarkCount(16);
+	slidLineSpace->UseFillColor(true, &color);
+	slidLineSpace->SetValue(fDemoView->lspace());
 
 	//
 	slidPulseRate = new SSlider(BRect(0, 0, 0, 0), "slidRadius", "Animation speed", new BMessage(WMM_MSG_SET_PULSE), 1, 5);
-	slidPulseRate->SetHashMarks( B_HASH_MARKS_BOTTOM);
-	slidPulseRate->SetHashMarkCount( 5);
-	slidPulseRate->UseFillColor( true, &color);
-	slidPulseRate->SetValue( Settings.pulse / 100000);
-
-	fDemoView = new BView(BRect(0, 0, 190, 50), NULL, 0, B_FULL_UPDATE_ON_RESIZE);
+	slidPulseRate->SetHashMarks(B_HASH_MARKS_BOTTOM);
+	slidPulseRate->SetHashMarkCount(5);
+	slidPulseRate->UseFillColor(true, &color);
+	slidPulseRate->SetValue(fDemoView->pulse() / 100000);
 
 	fAuthorView = new BStringView(NULL, "by Shard");
 	BFont font;
 	fAuthorView->GetFont(&font);
-	int size = font.Size();	// round down font size
+	int size = (int) font.Size();	// round down font size
 	size = size > 12 ? size * 2/3 : 8;
 	fAuthorView->SetFontSize(size);
 	fAuthorView->SetAlignment(B_ALIGN_RIGHT);
-
-	demoAlphaMod = (255 - WMM_ALPHA_MIN) / Settings.circles;
-	InitDemo();
 
 	BLayoutBuilder::Group<>(this, B_HORIZONTAL, 0)
 		.Add(fIconView, 0)
@@ -365,160 +357,28 @@ WMMSettingsView::~WMMSettingsView()
 	delete fAuthorView;
 
 	delete Icon;
-
-	SaveSettings( &Settings);
 }
 
 //---------------------------------------------------
-//	Attached to window - set siblings target to this
+//	Attached to window - set siblings target
 //---------------------------------------------------
 void
 WMMSettingsView::AttachedToWindow()
 {
-	slidRadius->SetTarget( this);
-	slidCircles->SetTarget( this);
-	slidLineWidth->SetTarget( this);
-	slidLineSpace->SetTarget( this);
-	slidPulseRate->SetTarget( this);
-	Window()->SetPulseRate( Settings.pulse);
-}
-
-//---------------------------------------------------
-//	Draw view
-//---------------------------------------------------
-void
-WMMSettingsView::Draw( BRect updateRect)
-{
-	demoRect = fDemoView->Bounds();
-
-	//demo background
-	fDemoView->SetHighColor(255, 255, 255, 255);
-	fDemoView->FillRoundRect(demoRect, 2, 2);
-	fDemoView->SetHighColor(0, 0, 0, 255);
-	fDemoView->StrokeRoundRect(demoRect, 2, 2);
-
-	InitDemo();
-}
-
-//---------------------------------------------------
-//	Draw demo
-//---------------------------------------------------
-void
-WMMSettingsView::DrawDemo()
-{
-	float right = demoRect.right, bottom = demoRect.bottom;
-
-	if( demoCircle < Settings.circles)
-	{
-		float oldPen = fDemoView->PenSize();
-		fDemoView->SetPenSize(Settings.lwidth);
-		BRegion region = BRegion(BRect(1, 1, right - 1, bottom - 1));
-		fDemoView->ConstrainClippingRegion(&region);
-
-		fDemoView->SetHighColor(demoColor);
-		fDemoView->StrokeEllipse(BPoint(right / 2, bottom / 2), demoRadius, demoRadius);
-		demoRadius += ( Settings.lwidth / 2) + Settings.lspace;
-		demoColor.alpha += demoAlphaMod;
-		demoCircle++;
-
-		fDemoView->ConstrainClippingRegion(NULL);
-		fDemoView->SetPenSize(oldPen);
-	}
-	else
-	{
-		//demo background
-		fDemoView->SetHighColor(255, 255, 255, 255);
-		fDemoView->FillRoundRect(BRect(1, 1, right - 1, bottom - 1), 2, 2);
-		//SetHighColor( 0, 0, 0, 255);
-		//StrokeRoundRect( demoRect, 2, 2);
-
-		InitDemo();
-	}
+	slidRadius->SetTarget(fDemoView);
+	slidCircles->SetTarget(fDemoView);
+	slidLineWidth->SetTarget(fDemoView);
+	slidLineSpace->SetTarget(fDemoView);
+	slidPulseRate->SetTarget(fDemoView);
 }
 
 //---------------------------------------------------
 //	Message handler
 //---------------------------------------------------
 void
-WMMSettingsView::MessageReceived( BMessage *msg)
+WMMSettingsView::MessageReceived(BMessage *msg)
 {
-	// drag & drop
-	if( msg->WasDropped())
-	{
-		rgb_color*	color;
-		ssize_t		size;
-		if( (msg->FindData("RGBColor", B_RGB_COLOR_TYPE, (const void **)&color, &size) == B_OK))
-			Settings.color = *color;
-		return;
-	}
+	if (msg->what == 'PSTE') return;
 
-	BRect rect = demoRect;
-	rect.left++;
-	rect.top++;
-	rect.right--;
-	rect.bottom--;
-
-	switch( msg->what)
-	{
-		case WMM_MSG_SET_RADIUS:
-		{
-			msg->FindInt32( "be:value", &Settings.radius);
-			fDemoView->Invalidate(rect);
-			InitDemo();
-			break;
-		}
-		case WMM_MSG_SET_CIRCLES:
-		{
-			msg->FindInt32( "be:value", &Settings.circles);
-			fDemoView->Invalidate(rect);
-			InitDemo();
-			break;
-		}
-		case WMM_MSG_SET_LWIDTH:
-		{
-			msg->FindInt32( "be:value", &Settings.lwidth);
-			fDemoView->Invalidate(rect);
-			InitDemo();
-			break;
-		}
-		case WMM_MSG_SET_LSPACE:
-		{
-			msg->FindInt32( "be:value", &Settings.lspace);
-			fDemoView->Invalidate(rect);
-			InitDemo();
-			break;
-		}
-		case WMM_MSG_SET_PULSE:
-		{
-			msg->FindInt32( "be:value", &Settings.pulse);
-			Settings.pulse = Settings.pulse * 100000;
-			Window()->SetPulseRate( Settings.pulse);
-			fDemoView->Invalidate(rect);
-			InitDemo();
-			break;
-		}
-		default:
-			BView::MessageReceived( msg);
-	}
-}
-
-//---------------------------------------------------
-//	Animate demo circles
-//---------------------------------------------------
-void
-WMMSettingsView::Pulse()
-{
-	DrawDemo();
-}
-
-//---------------------------------------------------
-//	Restart demo
-//---------------------------------------------------
-void
-WMMSettingsView::InitDemo()
-{
-	demoCircle = 0;
-	demoRadius = Settings.radius;
-	demoColor = Settings.color;
-	demoColor.alpha = WMM_ALPHA_MIN;
+	BView::MessageReceived(msg);
 }

@@ -25,7 +25,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #include <Bitmap.h>
 #include <FindDirectory.h>
 #include <Path.h>
-#include <Region.h>
 #include <StringView.h>
 #include <View.h>
 #include <Window.h>
@@ -33,6 +32,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #include <stdio.h>
 #include <string.h>
 
+#include "DemoView.h"
 #include "SSlider.h"
 #include "StripeView.h"
 #include "icon.h"
@@ -46,12 +46,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #define WMM_SIGNATURE "application/x-vnd.Shard.WMM"
 #define WMM_SETTINGS_FILE "WhereIsMyMouse_settings"
 
-const int32 WMM_MSG_SET_RADIUS = 'WSrd';
-const int32 WMM_MSG_SET_CIRCLES = 'WScr';
-const int32 WMM_MSG_SET_LWIDTH = 'WSlw';
-const int32 WMM_MSG_SET_LSPACE = 'WSls';
-const int32 WMM_MSG_SET_PULSE = 'WSpl';
-
 const int32 WMM_RADIUS_MIN = 32;
 const int32 WMM_CIRCLES_COUNT = 4;
 const int32 WMM_LINE_WIDTH = 10;
@@ -59,19 +53,8 @@ const int32 WMM_LINE_SPACE = 7;
 const int32 WMM_PULSE_RATE = 1000;
 rgb_color WMM_COLOR = { 255, 203, 0, 255};
 
-const int32 WMM_ALPHA_MIN = 55;
 //const int32 WMM_ALPHA_MOD = ( 255 - WMM_ALPHA_MIN) / WMM_CIRCLES_COUNT;
 
-
-struct WMM_SETTINGS
-{
-	int32		radius;
-	int32		circles;
-	int32		lwidth;
-	int32		lspace;
-	int32		pulse;
-	rgb_color	color;
-};
 
 //----------------------------------------------------------------------------
 //
@@ -85,36 +68,24 @@ struct WMM_SETTINGS
 class WMMSettingsView : public BView
 {
 	public:
-							WMMSettingsView();
-							~WMMSettingsView();
-		void				AttachedToWindow();
-		void				Draw( BRect updateRect);
-		void				DrawDemo();
-		void				MessageReceived( BMessage *msg);
-		void				Pulse();
-		void				InitDemo();
-		
+					WMMSettingsView();
+					~WMMSettingsView();
+		void		AttachedToWindow();
+		void		MessageReceived(BMessage *msg);
+
 	private:
-		StripeView			*fIconView;
+		StripeView	*fIconView;
 
-		SSlider				*slidRadius;
-		SSlider				*slidCircles;
-		SSlider				*slidLineWidth;
-		SSlider				*slidLineSpace;
-		SSlider				*slidPulseRate;
-		
-		BView				*fDemoView;
-		BStringView			*fAuthorView;
+		SSlider		*slidRadius;
+		SSlider		*slidCircles;
+		SSlider		*slidLineWidth;
+		SSlider		*slidLineSpace;
+		SSlider		*slidPulseRate;
 
-		BRect				demoRect;
-		rgb_color			demoColor;
-		int32				demoCircle;
-		int32				demoRadius;
-		int32				demoAlphaMod;
+		DemoView	*fDemoView;
+		BStringView	*fAuthorView;
 
-		BBitmap				*Icon;
-
-		WMM_SETTINGS		Settings;
+		BBitmap		*Icon;
 };
 
 //---------------------------------------------------
@@ -153,8 +124,6 @@ class WMMApp : public BApplication
 //
 //----------------------------------------------------------------------------
 
-void LoadSettings( WMM_SETTINGS *settings);
 void SettingsToDefault( WMM_SETTINGS *settings);
-void SaveSettings( WMM_SETTINGS *settings);
 
 #endif /*__WMM_H_*/
