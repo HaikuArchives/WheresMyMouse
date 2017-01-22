@@ -219,7 +219,7 @@ WMMView::AttachedToWindow()
 	Window()->MoveTo( mousePoint.x-size, mousePoint.y-size);
 	ConvertFromScreen( &mousePoint);
 
-	Window()->SetPulseRate( Settings.pulse);
+	Window()->SetPulseRate( Settings.pulse * WMM_PULSE_MULTIPLIER);
 }
 
 //---------------------------------------------------
@@ -306,7 +306,7 @@ WMMSettingsView::WMMSettingsView()
 	slidPulseRate->SetHashMarks(B_HASH_MARKS_BOTTOM);
 	slidPulseRate->SetHashMarkCount(5);
 	slidPulseRate->UseFillColor(true, &color);
-	slidPulseRate->SetValue(fDemoView->pulse() / 100000);
+	slidPulseRate->SetValue(fDemoView->pulse());
 
 	fAuthorView = new BStringView(NULL, "by Shard");
 	BFont font;

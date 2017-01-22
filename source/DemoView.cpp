@@ -20,8 +20,8 @@ DemoView::DemoView()
 	SetBlendingMode(B_PIXEL_ALPHA, B_ALPHA_OVERLAY);
 	SetDrawingMode(B_OP_ALPHA);
 
-	fAlphaMod = (255 - WMM_ALPHA_MIN) / Settings.circles;
-	fCircle = 0;
+	fRegion = BRegion(BRect(1, 1, 189, 49));
+	fCenter.Set(95, 25);
 	InitDemo();
 }
 
@@ -34,12 +34,12 @@ DemoView::~DemoView()
 }
 
 //---------------------------------------------------
-//	Attached to window - set siblings target to this
+//	Attached to window - set pulse rate
 //---------------------------------------------------
 void
 DemoView::AttachedToWindow()
 {
-	Window()->SetPulseRate(Settings.pulse);
+	Window()->SetPulseRate(Settings.pulse * WMM_PULSE_MULTIPLIER);
 }
 
 //---------------------------------------------------
@@ -49,31 +49,25 @@ void
 DemoView::Draw(BRect updateRect)
 {
 	//demo background
-	SetHighColor(255, 255, 255, 255);
-	FillRoundRect(updateRect, 2, 2);
+//	SetHighColor(255, 255, 255, 255);
+//	FillRoundRect(updateRect, 2, 2);
 	SetHighColor(0, 0, 0, 255);
 	StrokeRoundRect(updateRect, 2, 2);
 
-	float left = updateRect.left + 1;
-	float top = updateRect.top + 1;
-	float right = updateRect.right - 1;
-	float bottom = updateRect.bottom - 1;
-
-	float oldPen = PenSize();
+//	float oldPen = PenSize();
 	SetPenSize(Settings.lwidth);
-	BRegion region = BRegion(BRect(left, top, right, bottom));
-	ConstrainClippingRegion(&region);
+	ConstrainClippingRegion(&fRegion);
 
 	for (int i = 0; i < fCircle; i++)
 	{
 		SetHighColor(fColor);
-		StrokeEllipse(BPoint((left + right) / 2, (top + bottom) / 2), fRadius, fRadius);
+		StrokeEllipse(BPoint(fCenter.x, fCenter.y), fRadius, fRadius);
 		fRadius += Settings.lwidth / 2 + Settings.lspace;
 		fColor.alpha += fAlphaMod;
 	}
 
 	ConstrainClippingRegion(NULL);
-	SetPenSize(oldPen);
+//	SetPenSize(oldPen);
 }
 
 //---------------------------------------------------
@@ -119,7 +113,7 @@ DemoView::MessageReceived(BMessage *msg)
 		}
 		case WMM_MSG_SET_PULSE:
 		{
-			ProcMsg(msg, Settings.pulse, 100000);
+			ProcMsg(msg, Settings.pulse, true);
 			break;
 		}
 		default:
@@ -131,14 +125,18 @@ DemoView::MessageReceived(BMessage *msg)
 //	Process message
 //---------------------------------------------------
 void
-DemoView::ProcMsg(BMessage *msg, int32 &value, int32 factor)
+DemoView::ProcMsg(BMessage *msg, int32 &value, bool pulse)
 {
 	int32 current = value;
 
 	msg->FindInt32("be:value", &value);
-	value *= factor;
 
-	if (value != current) RestartDemo();
+	if (value != current)
+	{
+		RestartDemo();
+
+		if (pulse) Window()->SetPulseRate(value * WMM_PULSE_MULTIPLIER);
+	}
 }
 
 //---------------------------------------------------
@@ -150,7 +148,7 @@ DemoView::Pulse()
 	if (fCircle < Settings.circles) fCircle++;
 	else fCircle = 0;
 
-	InitDemo();
+	InitDemo(false);
 	Invalidate();
 }
 
@@ -160,15 +158,17 @@ DemoView::Pulse()
 void
 DemoView::RestartDemo()
 {
-	fCircle = 0;
 	InitDemo();
 	Invalidate();
 }
 
 void
-DemoView::InitDemo()
+DemoView::InitDemo(bool restart)
 {
+	if (restart) fCircle = 0;
+
 	fRadius = Settings.radius;
+	fAlphaMod = (255 - WMM_ALPHA_MIN) / Settings.circles;
 	fColor = Settings.color;
 	fColor.alpha = WMM_ALPHA_MIN;
 }

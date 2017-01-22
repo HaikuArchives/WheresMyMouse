@@ -21,6 +21,7 @@ const int32 WMM_MSG_SET_LSPACE = 'WSls';
 const int32 WMM_MSG_SET_PULSE = 'WSpl';
 
 const int32 WMM_ALPHA_MIN = 55;
+const int32 WMM_PULSE_MULTIPLIER = 100000;
 
 struct WMM_SETTINGS
 {
@@ -50,14 +51,16 @@ class DemoView : public BView
 
 	private:
 		rgb_color		fColor;
+		int32			fAlphaMod;
 		int32			fCircle;
 		int32			fRadius;
-		int32			fAlphaMod;
+		BRegion			fRegion;
+		BPoint			fCenter;
 		WMM_SETTINGS	Settings;
 
-		void			ProcMsg(BMessage *msg, int32 &value, int32 factor = 1);
+		void			ProcMsg(BMessage *msg, int32 &value, bool pulse = false);
 		void			RestartDemo();
-		void			InitDemo();
+		void			InitDemo(bool restart = true);
 };
 
 void LoadSettings( WMM_SETTINGS *settings);

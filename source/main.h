@@ -50,7 +50,7 @@ const int32 WMM_RADIUS_MIN = 32;
 const int32 WMM_CIRCLES_COUNT = 4;
 const int32 WMM_LINE_WIDTH = 10;
 const int32 WMM_LINE_SPACE = 7;
-const int32 WMM_PULSE_RATE = 1000;
+const int32 WMM_PULSE_RATE = 1;
 rgb_color WMM_COLOR = { 255, 203, 0, 255};
 
 //const int32 WMM_ALPHA_MOD = ( 255 - WMM_ALPHA_MIN) / WMM_CIRCLES_COUNT;
