@@ -18,6 +18,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 //
 //----------------------------------------------------------------------------
 
+#include <Catalog.h>
 #include <LayoutBuilder.h>
 #include "main.h"
 
@@ -149,7 +150,7 @@ WMMApp::WMMApp(bool showSettingsPanel)
 
 	if (showSettingsPanel)
 	{
-		window = new BWindow(BRect(200, 200, 200, 200), "Where's my Mouse settings?", B_TITLED_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL, B_AUTO_UPDATE_SIZE_LIMITS | B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_NOT_MINIMIZABLE | B_WILL_ACCEPT_FIRST_CLICK | B_QUIT_ON_WINDOW_CLOSE, B_ALL_WORKSPACES);
+		window = new BWindow(BRect(200, 200, 200, 200), B_TRANSLATE_SYSTEM_NAME("Where's my Mouse settings?"), B_TITLED_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL, B_AUTO_UPDATE_SIZE_LIMITS | B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_NOT_MINIMIZABLE | B_WILL_ACCEPT_FIRST_CLICK | B_QUIT_ON_WINDOW_CLOSE, B_ALL_WORKSPACES);
 		window->SetLayout(new BGroupLayout(B_VERTICAL));
 		window->AddChild(new WMMSettingsView());
 	}
@@ -256,6 +257,9 @@ WMMView::Pulse()
 //
 //----------------------------------------------------------------------------
 
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "WMMSettingsView"
+
 //---------------------------------------------------
 //	Constructor
 //---------------------------------------------------
@@ -273,7 +277,7 @@ WMMSettingsView::WMMSettingsView()
 	rgb_color color = ui_color(B_MENU_SELECTION_BACKGROUND_COLOR);
 
 	//
-	slidRadius = new SSlider(BRect(0, 0, 0, 0), "slidRadius", "Radius at start", new BMessage(WMM_MSG_SET_RADIUS), 16, 64);
+	slidRadius = new SSlider(BRect(0, 0, 0, 0), "slidRadius", B_TRANSLATE("Radius at start"), new BMessage(WMM_MSG_SET_RADIUS), 16, 64);
 	slidRadius->SetHashMarks(B_HASH_MARKS_BOTTOM);
 	slidRadius->SetHashMarkCount(16);
 	//slidRadius->SetLimitLabels("16", "64");
@@ -281,28 +285,28 @@ WMMSettingsView::WMMSettingsView()
 	slidRadius->SetValue(fDemoView->radius());
 
 	//
-	slidCircles = new SSlider(BRect(0, 0, 0, 0), "slidRadius", "Number of circles", new BMessage(WMM_MSG_SET_CIRCLES), 1, 15);
+	slidCircles = new SSlider(BRect(0, 0, 0, 0), "slidRadius", B_TRANSLATE("Number of circles"), new BMessage(WMM_MSG_SET_CIRCLES), 1, 15);
 	slidCircles->SetHashMarks(B_HASH_MARKS_BOTTOM);
 	slidCircles->SetHashMarkCount(15);
 	slidCircles->UseFillColor(true, &color);
 	slidCircles->SetValue(fDemoView->circles());
 
 	//
-	slidLineWidth = new SSlider(BRect(0, 0, 0, 0), "slidRadius", "Circle width", new BMessage(WMM_MSG_SET_LWIDTH), 1, 32);
+	slidLineWidth = new SSlider(BRect(0, 0, 0, 0), "slidRadius", B_TRANSLATE("Circle width"), new BMessage(WMM_MSG_SET_LWIDTH), 1, 32);
 	slidLineWidth->SetHashMarks(B_HASH_MARKS_BOTTOM);
 	slidLineWidth->SetHashMarkCount(16);
 	slidLineWidth->UseFillColor(true, &color);
 	slidLineWidth->SetValue(fDemoView->lwidth());
 
 	//
-	slidLineSpace = new SSlider(BRect(0, 0, 0, 0), "slidRadius", "Space between circles", new BMessage(WMM_MSG_SET_LSPACE), 1, 32);
+	slidLineSpace = new SSlider(BRect(0, 0, 0, 0), "slidRadius", B_TRANSLATE("Space between circles"), new BMessage(WMM_MSG_SET_LSPACE), 1, 32);
 	slidLineSpace->SetHashMarks(B_HASH_MARKS_BOTTOM);
 	slidLineSpace->SetHashMarkCount(16);
 	slidLineSpace->UseFillColor(true, &color);
 	slidLineSpace->SetValue(fDemoView->lspace());
 
 	//
-	slidPulseRate = new SSlider(BRect(0, 0, 0, 0), "slidRadius", "Animation speed", new BMessage(WMM_MSG_SET_PULSE), 1, 5);
+	slidPulseRate = new SSlider(BRect(0, 0, 0, 0), "slidRadius", B_TRANSLATE("Animation speed"), new BMessage(WMM_MSG_SET_PULSE), 1, 5);
 	slidPulseRate->SetHashMarks(B_HASH_MARKS_BOTTOM);
 	slidPulseRate->SetHashMarkCount(5);
 	slidPulseRate->UseFillColor(true, &color);

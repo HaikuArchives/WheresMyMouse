@@ -20,8 +20,6 @@ DemoView::DemoView()
 	SetBlendingMode(B_PIXEL_ALPHA, B_ALPHA_OVERLAY);
 	SetDrawingMode(B_OP_ALPHA);
 
-	fRegion = BRegion(BRect(1, 1, 189, 49));
-	fCenter.Set(95, 25);
 	InitDemo();
 }
 
@@ -48,26 +46,23 @@ DemoView::AttachedToWindow()
 void
 DemoView::Draw(BRect updateRect)
 {
-	//demo background
-//	SetHighColor(255, 255, 255, 255);
-//	FillRoundRect(updateRect, 2, 2);
-	SetHighColor(0, 0, 0, 255);
-	StrokeRoundRect(updateRect, 2, 2);
+	float left = updateRect.left + 1;
+	float top = updateRect.top + 1;
+	float right = updateRect.right - 1;
+	float bottom = updateRect.bottom - 1;
+	BRegion region(BRect(left, top, right, bottom));
 
-//	float oldPen = PenSize();
+	StrokeRoundRect(updateRect, 2, 2);
 	SetPenSize(Settings.lwidth);
-	ConstrainClippingRegion(&fRegion);
+	ConstrainClippingRegion(&region);
 
 	for (int i = 0; i < fCircle; i++)
 	{
 		SetHighColor(fColor);
-		StrokeEllipse(BPoint(fCenter.x, fCenter.y), fRadius, fRadius);
+		StrokeEllipse(BPoint((left + right) / 2, (top + bottom) / 2), fRadius, fRadius);
 		fRadius += Settings.lwidth / 2 + Settings.lspace;
 		fColor.alpha += fAlphaMod;
 	}
-
-	ConstrainClippingRegion(NULL);
-//	SetPenSize(oldPen);
 }
 
 //---------------------------------------------------

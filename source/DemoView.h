@@ -47,15 +47,12 @@ class DemoView : public BView
 		int32			lwidth() const { return Settings.lwidth; }
 		int32			lspace() const { return Settings.lspace; }
 		int32			pulse() const { return Settings.pulse; }
-		rgb_color		color() const { return Settings.color; }
 
 	private:
 		rgb_color		fColor;
 		int32			fAlphaMod;
 		int32			fCircle;
 		int32			fRadius;
-		BRegion			fRegion;
-		BPoint			fCenter;
 		WMM_SETTINGS	Settings;
 
 		void			ProcMsg(BMessage *msg, int32 &value, bool pulse = false);
