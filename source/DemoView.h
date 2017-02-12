@@ -36,25 +36,24 @@ struct WMM_SETTINGS
 class DemoView : public BView
 {
 	public:
-						DemoView();
+						DemoView(float bottom);
 						~DemoView();
 		void			AttachedToWindow();
 		void			Draw(BRect updateRect);
 		void			MessageReceived(BMessage *msg);
 		void			Pulse();
-		int32			radius() const { return Settings.radius; }
-		int32			circles() const { return Settings.circles; }
-		int32			lwidth() const { return Settings.lwidth; }
-		int32			lspace() const { return Settings.lspace; }
-		int32			pulse() const { return Settings.pulse; }
+		int32			radius() const { return fSettings.radius; }
+		int32			circles() const { return fSettings.circles; }
+		int32			lwidth() const { return fSettings.lwidth; }
+		int32			lspace() const { return fSettings.lspace; }
+		int32			pulse() const { return fSettings.pulse; }
 
 	private:
 		rgb_color		fColor;
 		int32			fAlphaMod;
 		int32			fCircle;
 		int32			fRadius;
-		WMM_SETTINGS	Settings;
-
+		WMM_SETTINGS	fSettings;
 		void			ProcMsg(BMessage *msg, int32 &value, bool pulse = false);
 		void			RestartDemo();
 		void			InitDemo(bool restart = true);
