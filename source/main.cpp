@@ -272,7 +272,16 @@ WMMSettingsView::WMMSettingsView()
 	memcpy(Icon->Bits(), WMM_ICON_DATA, 32*32*4);
 
 	fIconView = new StripeView(Icon);
-	fDemoView = new DemoView();
+	fAuthorView = new BStringView(NULL, "by Shard");
+
+	BFont font;
+	fAuthorView->GetFont(&font);
+	int size = (int) font.Size();	// round down font size
+
+	fAuthorView->SetFontSize(size > 12 ? size * 2/3 : 8);
+	fAuthorView->SetAlignment(B_ALIGN_RIGHT);
+
+	fDemoView = new DemoView(size > 16 ? size * 25/8 : 50);	// expand view height to maintain aspect ratio
 
 	rgb_color color = ui_color(B_MENU_SELECTION_BACKGROUND_COLOR);
 
@@ -311,14 +320,6 @@ WMMSettingsView::WMMSettingsView()
 	slidPulseRate->SetHashMarkCount(5);
 	slidPulseRate->UseFillColor(true, &color);
 	slidPulseRate->SetValue(fDemoView->pulse());
-
-	fAuthorView = new BStringView(NULL, "by Shard");
-	BFont font;
-	fAuthorView->GetFont(&font);
-	int size = (int) font.Size();	// round down font size
-	size = size > 12 ? size * 2/3 : 8;
-	fAuthorView->SetFontSize(size);
-	fAuthorView->SetAlignment(B_ALIGN_RIGHT);
 
 	BLayoutBuilder::Group<>(this, B_HORIZONTAL, 0)
 		.Add(fIconView, 0)
