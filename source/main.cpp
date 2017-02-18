@@ -264,7 +264,7 @@ WMMView::Pulse()
 //	Constructor
 //---------------------------------------------------
 WMMSettingsView::WMMSettingsView()
-:	BView(BRect(0, 0, 0, 0), "Maybe this, or that, or...", B_FOLLOW_ALL_SIDES, B_WILL_DRAW | B_FRAME_EVENTS | B_FULL_UPDATE_ON_RESIZE)
+:	BView("Maybe this, or that, or...", B_WILL_DRAW | B_FULL_UPDATE_ON_RESIZE)
 {
 	SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
@@ -286,7 +286,7 @@ WMMSettingsView::WMMSettingsView()
 	rgb_color color = ui_color(B_MENU_SELECTION_BACKGROUND_COLOR);
 
 	//
-	slidRadius = new SSlider(BRect(0, 0, 0, 0), "slidRadius", B_TRANSLATE("Radius at start"), new BMessage(WMM_MSG_SET_RADIUS), 16, 64);
+	slidRadius = new SSlider("slidRadius", B_TRANSLATE("Radius at start"), new BMessage(WMM_MSG_SET_RADIUS), 16, 64);
 	slidRadius->SetHashMarks(B_HASH_MARKS_BOTTOM);
 	slidRadius->SetHashMarkCount(16);
 	//slidRadius->SetLimitLabels("16", "64");
@@ -294,28 +294,28 @@ WMMSettingsView::WMMSettingsView()
 	slidRadius->SetValue(fDemoView->radius());
 
 	//
-	slidCircles = new SSlider(BRect(0, 0, 0, 0), "slidRadius", B_TRANSLATE("Number of circles"), new BMessage(WMM_MSG_SET_CIRCLES), 1, 15);
+	slidCircles = new SSlider("slidRadius", B_TRANSLATE("Number of circles"), new BMessage(WMM_MSG_SET_CIRCLES), 1, 15);
 	slidCircles->SetHashMarks(B_HASH_MARKS_BOTTOM);
 	slidCircles->SetHashMarkCount(15);
 	slidCircles->UseFillColor(true, &color);
 	slidCircles->SetValue(fDemoView->circles());
 
 	//
-	slidLineWidth = new SSlider(BRect(0, 0, 0, 0), "slidRadius", B_TRANSLATE("Circle width"), new BMessage(WMM_MSG_SET_LWIDTH), 1, 32);
+	slidLineWidth = new SSlider("slidRadius", B_TRANSLATE("Circle width"), new BMessage(WMM_MSG_SET_LWIDTH), 1, 32);
 	slidLineWidth->SetHashMarks(B_HASH_MARKS_BOTTOM);
 	slidLineWidth->SetHashMarkCount(16);
 	slidLineWidth->UseFillColor(true, &color);
 	slidLineWidth->SetValue(fDemoView->lwidth());
 
 	//
-	slidLineSpace = new SSlider(BRect(0, 0, 0, 0), "slidRadius", B_TRANSLATE("Space between circles"), new BMessage(WMM_MSG_SET_LSPACE), 1, 32);
+	slidLineSpace = new SSlider("slidRadius", B_TRANSLATE("Space between circles"), new BMessage(WMM_MSG_SET_LSPACE), 1, 32);
 	slidLineSpace->SetHashMarks(B_HASH_MARKS_BOTTOM);
 	slidLineSpace->SetHashMarkCount(16);
 	slidLineSpace->UseFillColor(true, &color);
 	slidLineSpace->SetValue(fDemoView->lspace());
 
 	//
-	slidPulseRate = new SSlider(BRect(0, 0, 0, 0), "slidRadius", B_TRANSLATE("Animation speed"), new BMessage(WMM_MSG_SET_PULSE), 1, 5);
+	slidPulseRate = new SSlider("slidRadius", B_TRANSLATE("Animation speed"), new BMessage(WMM_MSG_SET_PULSE), 1, 5);
 	slidPulseRate->SetHashMarks(B_HASH_MARKS_BOTTOM);
 	slidPulseRate->SetHashMarkCount(5);
 	slidPulseRate->UseFillColor(true, &color);
@@ -334,9 +334,9 @@ WMMSettingsView::WMMSettingsView()
 			.Add(fDemoView)
 			.Add(fAuthorView)
 			.AddStrut(10)
-		.End()
+			.End()
 		.AddStrut(10)
-	.End();
+		.End();
 }
 
 //---------------------------------------------------

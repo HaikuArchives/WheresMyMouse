@@ -13,12 +13,13 @@
 //	Constructor
 //---------------------------------------------------
 DemoView::DemoView(float bottom)
-:	BView(BRect(0, 0, 190, bottom), NULL, 0, B_PULSE_NEEDED | B_WILL_DRAW | B_FRAME_EVENTS | B_FULL_UPDATE_ON_RESIZE)
+:	BView(NULL, B_PULSE_NEEDED | B_WILL_DRAW | B_FULL_UPDATE_ON_RESIZE)
 {
 	LoadSettings(&fSettings);
 
 	SetBlendingMode(B_PIXEL_ALPHA, B_ALPHA_OVERLAY);
 	SetDrawingMode(B_OP_ALPHA);
+	SetExplicitMinSize(BSize(190, bottom));
 
 	InitDemo();
 }

@@ -43,7 +43,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 class SSlider : public BSlider
 {
 	public:
-							SSlider(BRect frame, const char *name, const char *label, BMessage *message, int32 minValue, int32 maxValue, orientation posture = B_HORIZONTAL, thumb_style thumbType = B_BLOCK_THUMB, uint32 resizingMode = B_FOLLOW_LEFT | B_FOLLOW_TOP, uint32 flags = B_NAVIGABLE | B_WILL_DRAW | B_FRAME_EVENTS);
+							SSlider(const char *name, const char *label, BMessage *message, int32 minValue, int32 maxValue);
 							~SSlider();
 		void				DrawThumb();
 		void				UpdateLabel();
