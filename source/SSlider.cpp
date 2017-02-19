@@ -33,8 +33,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 //---------------------------------------------------
 //	Constructor
 //---------------------------------------------------
-SSlider::SSlider(BRect frame, const char *name, const char *label, BMessage *message, int32 minValue, int32 maxValue, orientation posture, thumb_style thumbType, uint32 resizingMode, uint32 flags)
-:	BSlider( frame, name, label, message, minValue, maxValue, posture, thumbType, resizingMode, flags)
+SSlider::SSlider(const char *name, const char *label, BMessage *message, int32 minValue, int32 maxValue)
+:	BSlider(name, label, message, minValue, maxValue, B_HORIZONTAL, B_BLOCK_THUMB, B_NAVIGABLE | B_WILL_DRAW)
 {
 	basicLabel = (char*)malloc( strlen(label)+1);
 	strcpy( basicLabel, label);
