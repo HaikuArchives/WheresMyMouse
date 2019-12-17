@@ -16,9 +16,9 @@ Settings are saved in ~/config/settings/WhereIsMyMouse_settings
 
 ### Author
 
-©2002 by Marcin 'Shard' Konicki
+© 2002 by [Marcin 'Shard' Konicki](http://shard.beosjournal.org)
+
 shard@beosjournal.org
-http://shard.beosjournal.org
 
 ### Credits
 
